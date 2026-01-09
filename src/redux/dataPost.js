@@ -20,11 +20,16 @@ export const getData = createAsyncThunk(
     return data;
   }
 );
+
 export const getFaq = createAsyncThunk("fetchData/getFaq", async (thunkApi) => {
-  const { data, error } = await supabase.from("FAQ").select("*") .order("id", { ascending: true });
+  const { data, error } = await supabase
+    .from("FAQ")
+    .select("*")
+    .order("id", { ascending: true });
   if (error) throw error;
   return data;
 });
+
 export const getCodes = createAsyncThunk(
   "fetchData/getCodes",
   async (thunkApi) => {
@@ -33,6 +38,7 @@ export const getCodes = createAsyncThunk(
     return data;
   }
 );
+
 export const getBlogs = createAsyncThunk(
   "fetchData/getBlogs",
   async (thunkApi) => {
@@ -46,50 +52,60 @@ export const allSlice = createSlice({
   name: "fetchData",
   initialState,
   reducers: {},
-  extraReducers: {
-    [getData.pending]: (state) => {
-      state.loading = true;
-    },
-    [getData.fulfilled]: (state, { payload }) => {
-      state.loading = false;
-      payload != [] && (state.products = payload);
-    },
-    [getData.rejected]: (state) => {
-      state.loading = false;
-    },
+  extraReducers: (builder) => {
+    builder
+      .addCase(getData.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getData.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        if (payload && payload.length > 0) {
+          state.products = payload;
+        }
+      })
+      .addCase(getData.rejected, (state) => {
+        state.loading = false;
+      })
 
-    [getCodes.rejected]: (state) => {
-      state.loading = false;
-    },
-    [getCodes.pending]: (state) => {
-      state.loading = true;
-    },
-    [getCodes.fulfilled]: (state, { payload }) => {
-      state.loading = false;
-      payload != [] && (state.codes = payload);
-    },
+      .addCase(getCodes.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getCodes.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        if (payload && payload.length > 0) {
+          state.codes = payload;
+        }
+      })
+      .addCase(getCodes.rejected, (state) => {
+        state.loading = false;
+      })
 
-    [getBlogs.pending]: (state) => {
-      state.loading = true;
-    },
-    [getBlogs.fulfilled]: (state, { payload }) => {
-      state.loading = false;
-      payload != [] && (state.blogs = payload);
-    },
-    [getBlogs.rejected]: (state) => {
-      state.loading = false;
-    },
+      .addCase(getBlogs.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getBlogs.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        if (payload && payload.length > 0) {
+          state.blogs = payload;
+        }
+      })
+      .addCase(getBlogs.rejected, (state) => {
+        state.loading = false;
+      })
 
-    [getFaq.pending]: (state) => {
-      state.loading = true;
-    },
-    [getFaq.fulfilled]: (state, { payload }) => {
-      state.loading = false;
-      payload != [] && (state.faq = payload);
-    },
-    [getFaq.rejected]: (state) => {
-      state.loading = false;
-    },
+      .addCase(getFaq.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(getFaq.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        if (payload && payload.length > 0) {
+          state.faq = payload;
+        }
+      })
+      .addCase(getFaq.rejected, (state) => {
+        state.loading = false;
+      });
   },
 });
+
 export const fetchReducer = allSlice.reducer;
